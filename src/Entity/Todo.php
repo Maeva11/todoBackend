@@ -23,7 +23,7 @@ class Todo
     private $name;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", length=999)
      */
     private $Description;
 

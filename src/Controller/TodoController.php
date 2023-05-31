@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * @Route("/todo")
@@ -20,9 +21,19 @@ class TodoController extends AbstractController
      */
     public function index(TodoRepository $todoRepository): Response
     {
-        return $this->render('todo/index.html.twig', [
-            'todos' => $todoRepository->findAll(),
-        ]);
+        $criteria =[];
+        if (isset($_REQUEST['order']) && isset($_REQUEST['orderby'])) {
+
+            $criteria = [$_REQUEST['orderby'] => $_REQUEST['order']];
+
+            return $this->render('todo/index.html.twig', [
+                'todos' => $todoRepository->findBy([], $criteria)
+            ]);
+        } else {
+            return $this->render('todo/index.html.twig', [
+                'todos' => $todoRepository->findAll()
+            ]);
+        }
     }
 
     /**
@@ -81,7 +92,7 @@ class TodoController extends AbstractController
      */
     public function delete(Request $request, Todo $todo, TodoRepository $todoRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$todo->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $todo->getId(), $request->request->get('_token'))) {
             $todoRepository->remove($todo, true);
         }
 

@@ -9,7 +9,7 @@
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Name</th>
+                <th><a href="{{ path('app_todo_index')}}?orderby=name&order=asc">Name</a></th>
                 <th>Description</th>
                 <th>actions</th>
             </tr>
@@ -18,7 +18,7 @@
         {% for todo in todos %}
             <tr>
                 <td>{{ todo.id }}</td>
-                <td>{{ todo.name }}</td>
+                <td>{{todo.name }}</td>
                 <td>{{ todo.description }}</td>
                 <td>
                     <a href="{{ path('app_todo_show', {'id': todo.id}) }}">show</a>

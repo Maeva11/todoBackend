@@ -4,18 +4,20 @@ namespace App\Form;
 
 use App\Entity\Todo;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class TodoType extends AbstractType
+class TodoFilterType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
-            ->add('description')
-            ->add('done')
-        ;
+            ->add('stillTodo', CheckboxType::class, [
+                'mapped' => false,
+                'label' => 'N\'afficher que les tâches à faire', 
+                'required' => false,
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

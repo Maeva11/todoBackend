@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Todo;
+use App\Form\SearchTodoType;
 use App\Form\TodoFilterType;
 use App\Form\TodoType;
 use App\Repository\TodoRepository;
@@ -25,13 +26,25 @@ class TodoController extends AbstractController
         $form = $this->createForm(TodoFilterType::class);
         $form->handleRequest($request);
 
+        $formSearch = $this->createForm(SearchTodoType::class);
+        $formSearch->handleRequest($request);
+
         $criteria = [];
 
         if ($form->isSubmitted() && isset($_POST['todo_filter']['stillTodo'])) {
             return $this->render('todo/index.html.twig', [
                 'todos' => $todoRepository->findBy(['done' => !($_POST['todo_filter']['stillTodo'])]),
-                'form' => $form->createView()
+                'form' => $form->createView(),
+                'formSearch' => $formSearch->createView()
 
+            ]);
+        }
+
+        if ($formSearch->isSubmitted() && isset($_POST['search_todo']['searchName'])) {
+            return $this->render('todo/index.html.twig', [
+                'form' => $form->createView(),
+                'formSearch' => $formSearch->createView(),
+                'todos' => $todoRepository->searchByName($_POST['search_todo']['searchName'])
             ]);
         }
 
@@ -41,13 +54,15 @@ class TodoController extends AbstractController
 
             return $this->render('todo/index.html.twig', [
                 'todos' => $todoRepository->findBy([], $criteria),
-                'form' => $form->createView()
+                'form' => $form->createView(),
+                'formSearch' => $formSearch->createView()
 
             ]);
         } else {
             return $this->render('todo/index.html.twig', [
                 'todos' => $todoRepository->findAll(),
-                'form' => $form->createView()
+                'form' => $form->createView(),
+                'formSearch' => $formSearch->createView()
             ]);
         }
     }

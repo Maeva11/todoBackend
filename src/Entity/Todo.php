@@ -37,7 +37,7 @@ class Todo
      * @ORM\JoinColumn(nullable=false)
      */
     private $priority;
-
+ 
     public function getId(): ?int
     {
         return $this->id;
